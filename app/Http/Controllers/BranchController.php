@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Branch;
+use Response;
 
 class BranchController extends Controller
 {
@@ -14,6 +16,8 @@ class BranchController extends Controller
     public function index()
     {
         //
+        $branches = Branch::withTrashed()->get();
+        return view('maintenance.branch', ['branches' => $branches]);
     }
 
     /**
@@ -35,6 +39,16 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         //
+        $rules = ['branch_name' => 'required',
+                  'branch_desc' => 'required'];
+
+        $this->validate($request, $rules);
+        $branch = new Branch;
+        $branch->branch_name = $request->branch_name;
+        $branch->branch_desc = $request->branch_desc;
+        $branch->save();
+
+        return redirect('branch')->with('alert-success', 'Branch was successfully saved.');
     }
 
     /**
@@ -46,6 +60,8 @@ class BranchController extends Controller
     public function show($id)
     {
         //
+        $branch = Branch::find($id);
+        return Response::json($branch);
     }
 
     /**
@@ -80,5 +96,33 @@ class BranchController extends Controller
     public function destroy($id)
     {
         //
+        $branch = Branch::find($id);
+        $branch->delete();
+        return redirect('branch')->with('alert-success', 'Branch '. $id .' was successfully deleted.');
+    }
+
+    public function branch_update(Request $request)
+    {
+      $rules = ['branch_name' => 'required',
+                'branch_desc' => 'required'];
+
+      $id = $request->branch_id;
+
+      $this->validate($request, $rules);
+      $branch = Branch::find($id);
+      $branch->branch_name = $request->branch_name;
+      $branch->branch_desc = $request->branch_desc;
+      $branch->save();
+
+      return redirect('branch')->with('alert-success', 'Branch ' . $id . ' was successfully updated.');
+    }
+
+    public function branch_restore(Request $request)
+    {
+      $id = $request->branch_id;
+      $branch = Branch::onlyTrashed()->where('id', '=', $id)->firstOrFail();
+      $branch->restore();
+
+      return redirect('branch')->with('alert-success', 'Branch ' . $id . ' was successfully restored.');
     }
 }

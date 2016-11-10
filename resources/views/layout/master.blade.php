@@ -10,7 +10,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/brand">CRUD App</a>
+          <a class="navbar-brand" href="{{ url('/') }}">CRUD App</a>
         </div>
       </div>
     </nav>
@@ -20,10 +20,10 @@
         <div class="col-md-2 sidebar">
           <h3>Maintenance</h3>
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="/brand">Brand</a></li>
-            <li><a href="/category">Category</a></li>
-            <li><a href="#">Branch</a></li>
-            <li><a href="/product">Product</a></li>
+            <li class="active"><a href="{{ url('/brand') }}">Brand</a></li>
+            <li><a href="{{ url('/category') }}">Category</a></li>
+            <li><a href="{{ url('/branch') }}">Branch</a></li>
+            <li><a href="{{ url('/product') }}">Product</a></li>
           </ul>
           <h3>Transaction</h3>
           <ul class="nav nav-sidebar">
